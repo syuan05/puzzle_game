@@ -18,6 +18,7 @@ step = 0
 end_game = False
 copy_image = cv2.imread("1.png")
 start_time = time.monotonic()
+spend_time = 0.00
 current_time = 0.00
 remain_time = 0.00
 count_time = 20.00
@@ -47,13 +48,6 @@ def button_select(event, x, y, flags, param):
     global degree
     global picture
     global canva
-    global squareList
-    global count_time
-    global firstClick
-    global start_time
-    global remain_time
-    global spend_time
-    global step
     if event == cv2.EVENT_LBUTTONDOWN:
         if 116 <= x <= 285 and 36 <= y <= 205:
             picture = 1
@@ -122,13 +116,7 @@ def button_click(event, x, y, flags, param):
 def reset_game(event, x, y, flags, param):
     global canva
     global squareList
-    global firstClick
-    global step
     global end_game
-    global start_time
-    global count_time
-    global remain_time
-    global spend_time
     if event == cv2.EVENT_LBUTTONDOWN:
         if 200 <= x <= 350 and 480 <= y <= 520:
             canva = cv2.imread("background.jpg")
@@ -210,24 +198,10 @@ def move_square(event, x, y, flags, param):
             return
     current_time = time.monotonic()
     spend_time = current_time - start_time
-    
     cv2.rectangle(canva, (570, 10), (670, 50), (159, 181, 162), -1)
     cv2.putText(canva, "BACK", (585, 35), cv2.FONT_HERSHEY_TRIPLEX, 0.8, (255, 255, 255), 1)
     cv2.putText(canva, f"step = {step}", (35, 600), cv2.FONT_HERSHEY_TRIPLEX, 0.8, (255, 255, 255), 1)
-    if degree == 3:
-        remain_time = count_time - spend_time
-        cv2.putText(canva, f"time = {remain_time:.2f}", (35, 630), cv2.FONT_HERSHEY_TRIPLEX, 0.8, (255, 255, 255), 1)
-        if remain_time <= 0:
-            cv2.rectangle(canva, (150, 150), (550, 550), (215, 203, 193), -1)
-            cv2.putText(canva, "Times up!", (230, 300), cv2.FONT_HERSHEY_TRIPLEX, 1.5, (169, 150, 134), 1)
-            cv2.putText(canva, "Game Over!", (200, 350), cv2.FONT_HERSHEY_TRIPLEX, 1.5, (169, 150, 134), 1)
-            cv2.rectangle(canva, (200, 480), (350, 520), (184, 168, 156), -1)
-            cv2.putText(canva, "Play again", (210, 510), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
-            cv2.rectangle(canva, (400, 480), (500, 520), (184, 168, 156), -1)
-            cv2.putText(canva, "Leave", (415, 510), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
-            cv2.setMouseCallback('Game!', reset_game)
-    elif degree == 4 or degree == 5:
-        cv2.putText(canva, f"time = {spend_time:.2f}", (35, 630), cv2.FONT_HERSHEY_TRIPLEX, 0.8, (255, 255, 255), 1)
+    
 
 
 # 分割圖片
@@ -261,11 +235,6 @@ def game_start(event, x, y, flags, param):
     global canva
     global squareList
     global firstClick
-    global step
-    global start_time
-    global count_time
-    global spend_time
-    global remain_time
     if event == cv2.EVENT_LBUTTONDOWN:
         if 570 <= x <= 670 and 10 <= y <= 50:
             canva = cv2.imread("background.jpg")
@@ -289,6 +258,20 @@ cv2.setMouseCallback('Game!', button_click)
 
 while True:
     cv2.imshow("Game!", canva)
+    if degree == 3:
+        remain_time = count_time - spend_time
+        cv2.putText(canva, f"time = {remain_time:.2f}", (35, 630), cv2.FONT_HERSHEY_TRIPLEX, 0.8, (255, 255, 255), 1)
+        if remain_time <= 0:
+            cv2.rectangle(canva, (150, 150), (550, 550), (215, 203, 193), -1)
+            cv2.putText(canva, "Times up!", (230, 300), cv2.FONT_HERSHEY_TRIPLEX, 1.5, (169, 150, 134), 1)
+            cv2.putText(canva, "Game Over!", (200, 350), cv2.FONT_HERSHEY_TRIPLEX, 1.5, (169, 150, 134), 1)
+            cv2.rectangle(canva, (200, 480), (350, 520), (184, 168, 156), -1)
+            cv2.putText(canva, "Play again", (210, 510), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
+            cv2.rectangle(canva, (400, 480), (500, 520), (184, 168, 156), -1)
+            cv2.putText(canva, "Leave", (415, 510), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
+            cv2.setMouseCallback('Game!', reset_game)
+    elif degree == 4 or degree == 5:
+        cv2.putText(canva, f"time = {spend_time:.2f}", (35, 630), cv2.FONT_HERSHEY_TRIPLEX, 0.8, (255, 255, 255), 1)
     if (cv2.waitKey(1) & 0xFF == 27) or end_game is True:
         break
 
